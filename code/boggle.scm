@@ -72,11 +72,8 @@
        (iota (board-length board)))
   (extract-word-list word-list))
 
-(define collins-dawg
-  (d:fetch-dawg "share/collins.fasl"))
-
-(define (gobble board)
-  (boggle-search (make-board board) collins-dawg))
+(define (gobble board dawg)
+  (boggle-search (make-board board) dawg))
 
 (define score-vector
   '#vfx(0 0 0 1 1 2 3 5 11))

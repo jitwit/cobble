@@ -1,4 +1,5 @@
 (import (gobble)
+	(prefix (dawg) d:)
         (only (euler) shuffle square? compose)
         (matchable))
 
@@ -28,15 +29,16 @@
          (else #f)))))
 
 ;; fill directory to have n boards
-(define (generate-in-directory n dir)
+(define (generate-in-directory n dawg-path dir)
   (define n* (length (directory-list dir)))
   (define N (- n n*))
+  (define dawg (d:fetch-dawg dawg-path))
   (format #t "there are ~a board(s), making ~a more~%" n* N)
   (let make ((i 1) (j 1))
     (unless (> i N)
       (let* ((board (substring (roll dice-5x5) 0 16))
              (board-file (string-append dir "/" board))
-             (solution (gobble board)))
+             (solution (gobble board dawg)))
         (cond
          ((file-exists? board-file)
           (error 'generate "time to make better randoms, eh?"))
@@ -50,11 +52,12 @@
 	  (format #t "rejecting ~a ~5d/~d/~d~%" board i j N)
           (make i (fx1+ j))))))))
 
-(define (generate-stdout n)
+(define (generate-stdout n dawg-path)
   (define made 0)
+  (define dawg (d:fetch-dawg dawg-path))
   (let make ()
     (let* ((board (substring (roll dice-5x5) 0 16))
-	     (solution (gobble board)))
+	     (solution (gobble board dawg)))
 	(when (interesting-board? solution)
 	  (set! made (fx1+ made))
 	  (dump-solution board solution)))
@@ -63,16 +66,17 @@
 
 (define generate
   (case-lambda
-    ((n dir) (generate-in-directory n dir))
-    ((n)     (generate-stdout n))))
+    ((n dawg dir) (generate-in-directory n dawg dir))
+    ((n dawg)     (generate-stdout n dawg))))
 
-(define (solve-single board)
+(define (solve-single board dawg)
+  (define dawg (d:fetch-dawg dawg))  
   (unless (square? (string-length board))
     (format #t
 	    "Expecting square size board but ~s has ~a characters~%"
 	    board (string-length board))
     (exit 1))
-  (let* ((words (gobble board))
+  (let* ((words (gobble board dawg))
 	 (n (apply max (cons 0 (map (compose string-length) words))))
 	 (fmt (format "~~~aa~~%" (+ 2 n))))
     (for-each (lambda (word)
@@ -89,24 +93,26 @@
     (() (format #t "gobbler solves and generates boggle boards.
 options:
 
-    -n <n> -d <dir>    solve n random boards and save to files in given directory
-    -n <n> -stdout     solve n random boards, dumping solutions to stdout
-    -b <board>         output solutions to board
-    (-r | -rn)         output a random board. use -rn to get flat chars or -r for square
-    -h                 self
+    -n <n> -dawg <path> -d <dir>    solve n random boards and save to files in given directory
+    -n <n> -dawg <path> -stdout     solve n random boards, dumping solutions to stdout
+    -b <board> -dawg <path>         output solutions to board
+    (-r | -rn)                      output a random board. use -rn to get flat chars or -r for square
+    -h                              self
 "))
     ((args)
      (help-message)
      (format #t "~%got arguments: ~a~%" args))))
 
 (define (main)
+  (display (command-line)) (newline)
   (match (command-line)
-    ((_ "-n" n "-d" dir)  (generate (string->number n) dir))
-    ((_ "-n" n "-stdout") (generate (string->number n)))
-    ((_ "-b" board)       (solve-single board))
-    ((_ "-r")             (random-board))
-    ((_ "-rn")            (random-board 'flat))
-    ((_ "-h")             (help-message))
-    (else                 (help-message (command-line)))))
+    ((_ "-n" n "-dawg" dawg "-d" dir)  (generate (string->number n) dawg dir))
+    ((_ "-n" n "-dawg" dawg "-stdout") (generate (string->number n) dawg))
+    ((_ "-b" board "-dawg" dawg)       (solve-single board dawg))
+    ((_ "-r")                          (random-board))
+    ((_ "-rn")                         (random-board 'flat))
+    ((_ "-h")                          (help-message))
+    (else                              (help-message (command-line)))))
 
 (main)
+
