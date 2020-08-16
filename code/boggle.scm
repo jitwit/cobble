@@ -76,7 +76,7 @@
   (extract-word-list word-list))
 
 (define collins-dawg
-  (d:fetch-dawg "share/dawg.fasl"))
+  (d:fetch-dawg "share/collins.fasl"))
 
 (define (gobble board)
   (boggle-search (make-board board) collins-dawg))
