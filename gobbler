@@ -1,0 +1,1 @@
+scheme -q --program gobbler.so $@
