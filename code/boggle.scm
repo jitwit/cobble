@@ -2,9 +2,7 @@
   (fields letters spot mask tree))
 
 (define (tree-step x T)
-  (and T (d:lookup-prefix T (list x))
-       ;; (t:lookup-with-default (char->integer x) #f (trie-tries T))
-       ))
+  (and T (d:lookup-char T x)))
 
 (define char-substitutes-table
   (fold-right (lambda (char substitutes table)
@@ -41,7 +39,6 @@
 
 (define (extract-word-list word-list)
   (sort (lambda (S1 S2)
-	  ;; (let ((S1 (car S1)) (S2 (car S2))))
 	  (or (> (string-length S1) (string-length S2))
 	      (and (= (string-length S1) (string-length S2))
 		   (string<? S1 S2))))
