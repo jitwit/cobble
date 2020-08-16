@@ -12,15 +12,15 @@ build : $(objs)
 install : $(objs)
 	mkdir -p $(out)/lib/csv-site
 	mkdir -p $(out)/bin
-	cp gobbler.so $(out)/lib/csv-site
-	cp gobble.so $(out)/bin
+	cp gobble.so $(out)/lib/csv-site
+	cp gobbler.so $(out)/bin
 	cp gobbler $(out)/bin
 
 gobble.so : gobble.sls code/*.scm
 	echo "(compile-library \"$<\")" | $(scheme)
 
 gobbler.so : gobbler.ss gobble.so
-	echo "(compile-script \"$<\")" | $(scheme)
+	echo "(compile-program \"$<\")" | $(scheme)
 
 boards : gobbler.so
 	rm -rf $(local-boards)

@@ -1,4 +1,5 @@
-(import (gobble)
+(import (chezscheme)
+	(gobble)
 	(prefix (dawg) d:)
         (only (euler) shuffle square? compose)
         (matchable))
