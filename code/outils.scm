@@ -4,22 +4,24 @@
     (let ((t (vector-ref V i)))
       (vector-set! V i (vector-ref V j))
       (vector-set! V j t))))
+
 (define shuffle!
   (lambda (V)
     (let loop ((i (1- (vector-length V))))
       (unless (< i 1)
-	(let ((j (random (1+ i))))
-	  (vector-swap! V i j))
-	(loop (1- i))))
-    'done))
+	(vector-swap! V i (random (1+ i)))
+	(loop (1- i))))))
+
 (define shuffle
   (lambda (X)
     (let ((V (list->vector X)))
       (shuffle! V)
       (vector->list V))))
+
 (define square
   (lambda (x)
     (* x x)))
+
 (define-syntax compose
   (lambda (x)
     (syntax-case x ()
@@ -28,6 +30,7 @@
       ((_ f g ...)
        #'(lambda (x)
 	   (f ((compose g ...) x)))))))
+
 (define filter-map
   (lambda (p xs)
     (fold-right (lambda (x xs)

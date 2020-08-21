@@ -13,8 +13,7 @@ sys	0m0.027s
 
 The secret sauce is the [[https://en.wikipedia.org/wiki/Deterministic_acyclic_finite_state_automaton][dawg]] data structure, which is like a trie, but
 with shared subtrees. I was previously using a trie, but the load time
-was a bit excessive. Solve times are similar with the two structures,
-though implementing a dawg gave a definite boost there, too.
+was a bit excessive.
 
 * Dependencies
 
