@@ -2,7 +2,6 @@
 (eval-when (load compile) (optimize-level 3))
 (library (gobble)
   (export gobble
-
 	  ;; boards
           display-board
           display-ln
@@ -14,9 +13,7 @@
 	  board-graph
 	  board-rectangle)
   (import (chezscheme)
-          (only (euler) shuffle compose square)
-          (only (srfi :1) append-map filter-map)
-	  (prefix (dawg) d:)
-	  (prefix (patricia) t:))
+	  (prefix (dawg) d:))
+  (include "code/outils.scm")
   (include "code/board.scm")
   (include "code/boggle.scm"))

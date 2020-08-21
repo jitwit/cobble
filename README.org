@@ -18,9 +18,7 @@ though implementing a dawg gave a definite boost there, too.
 
 * Dependencies
 
-+ [[https://github.com/jitwit/hemlock][hemlock]]
-+ [[https://github.com/jitwit/chez-euler][chez-euler]]
-+ [[https://github.com/fedeinthemix/chez-srfi/][chez-srfi]]
-+ [[https://github.com/fedeinthemix/chez-matchable][chez-matchable]]
++ [[https://github.com/jitwit/hemlock][hemlock]] - data structures
++ [[https://github.com/fedeinthemix/chez-matchable][chez-matchable]] - convenience
 
 

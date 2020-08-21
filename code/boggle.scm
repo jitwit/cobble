@@ -4,27 +4,6 @@
 (define (tree-step x T)
   (and T (d:lookup-char T x)))
 
-(define char-substitutes-table
-  (fold-right (lambda (char substitutes table)
-		(t:insert (char->integer char)
-			  substitutes
-			  table))
-	      t:empty
-	      (string->list "EeCcAaOo")
-	      '((#\E #\É #\È)
-		(#\e #\é #\è)
-		(#\C #\Ç)
-		(#\c #\ç)
-		(#\A #\À)
-		(#\a #\à)
-		(#\O #\Ô)
-		(#\o #\ô))))
-
-(define (char-substitutes char)
-  (t:lookup-with-default (char->integer char)
-			 `(,char)
-			 char-substitutes-table))
-
 (define (extend path board j)
   (let ((x (board-ref board j)))
     (if (char=? x #\Q)
