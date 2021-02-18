@@ -1,3 +1,5 @@
+#!chezscheme
+
 (import (chezscheme)
 	(gobble)
 	(prefix (dawg) d:)
@@ -53,15 +55,27 @@
 	  (format #t "rejecting ~a ~5d/~d/~d~%" board i j N)
           (make i (fx1+ j))))))))
 
+(define (solve-boards boards-file dawg-path)
+  (define dawg (d:fetch-dawg dawg-path))
+  (with-input-from-file boards-file
+    (lambda ()
+      (define in (current-input-port))
+      (let lp ()
+	(match (get-line in)
+	  (#!eof (void))
+	  (board
+	   (dump-solution board (gobble board dawg))
+	   (lp)))))))
+
 (define (generate-stdout n dawg-path)
   (define made 0)
   (define dawg (d:fetch-dawg dawg-path))
   (let make ()
     (let* ((board (substring (roll dice-5x5) 0 16))
-	     (solution (gobble board dawg)))
-	(when (interesting-board? solution)
-	  (set! made (fx1+ made))
-	  (dump-solution board solution)))
+	   (solution (gobble board dawg)))
+      (when (interesting-board? solution)
+	(set! made (fx1+ made))
+	(dump-solution board solution)))
     (unless (fx= made n)
       (make))))
 
@@ -71,7 +85,7 @@
     ((n dawg)     (generate-stdout n dawg))))
 
 (define (solve-single board dawg)
-  (define dawg (d:fetch-dawg dawg))  
+  (define dawg (d:fetch-dawg dawg))
   (unless (square? (string-length board))
     (format #t
 	    "Expecting square size board but ~s has ~a characters~%"
@@ -97,6 +111,7 @@ options:
     -n <n> -dawg <path> -d <dir>    solve n random boards and save to files in given directory
     -n <n> -dawg <path> -stdout     solve n random boards, dumping solutions to stdout
     -b <board> -dawg <path>         output solutions to board
+    -f <file> -dawg <path>          output solutions to boards in file
     (-r | -rn)                      output a random board. use -rn to get flat chars or -r for square
     -h                              self
 "))
@@ -110,10 +125,10 @@ options:
     ((_ "-n" n "-dawg" dawg "-d" dir)  (generate (string->number n) dawg dir))
     ((_ "-n" n "-dawg" dawg "-stdout") (generate (string->number n) dawg))
     ((_ "-b" board "-dawg" dawg)       (solve-single board dawg))
+    ((_ "-f" file "-dawg" dawg)        (solve-boards file dawg))
     ((_ "-r")                          (random-board))
     ((_ "-rn")                         (random-board 'flat))
     ((_ "-h")                          (help-message))
     (else                              (help-message (command-line)))))
 
 (main)
-

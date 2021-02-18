@@ -1,19 +1,10 @@
 * Cobble
 
-A reasonably fast boggle solver implemented in [[https://cisco.github.io/ChezScheme/][ChezScheme]]. I use this
-to generate boards for [[https://github.com/jitwit/gobble][gobble]], a multiplayer boggle game. 
+A reasonably fast boggle solver implemented in [[https://cisco.github.io/ChezScheme/][ChezScheme]].
 
-#+BEGIN_EXAMPLE
-~ time gobbler -n 10000 -dawg cobble/share/collins.fasl -stdout > /dev/null
-
-real	0m3.439s
-user	0m3.412s
-sys	0m0.027s
-#+end_example
-
-The secret sauce is the [[https://en.wikipedia.org/wiki/Deterministic_acyclic_finite_state_automaton][dawg]] data structure, which is like a trie, but
-with shared subtrees. I was previously using a trie, but the load time
-was a bit excessive.
+The key is the [[https://en.wikipedia.org/wiki/Deterministic_acyclic_finite_state_automaton][dawg]] data structure, which is like a trie, but with
+shared subtrees. I was previously using a trie, but the load time was
+a bit excessive.
 
 * Dependencies
 

@@ -11,7 +11,8 @@
 	  score-word
 	  score-word-list
 	  board-graph
-	  board-rectangle)
+	  board-rectangle
+	  make-board)
   (import (chezscheme)
 	  (prefix (dawg) d:))
   (include "code/outils.scm")

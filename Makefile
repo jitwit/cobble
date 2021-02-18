@@ -22,6 +22,9 @@ gobble.so : gobble.sls code/*.scm
 gobbler.so : gobbler.ss gobble.so
 	echo "(compile-program \"$<\")" | $(scheme)
 
+share/collins.fasl : make-dictionary.ss gobble.so
+	scheme --script make-dictionary.ss
+
 boards : gobbler.so
 	rm -rf $(local-boards)
 	mkdir -p $(local-boards)
