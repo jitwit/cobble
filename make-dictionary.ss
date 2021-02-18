@@ -1,4 +1,5 @@
 (library-directories (cons "." (library-directories)))
+(optimize-level 3)
 
 (import (gobble)
 	(matchable)
@@ -20,10 +21,9 @@
 	(match (get-line (current-input-port))
 	  (#!eof xs)
 	  (ln
-	   (lp (cons (map no-cr
-			  (string-tokenize ln
-					   (char-set-complement
-					    (char-set #\tab))))
+	   (lp (cons (string-tokenize (no-cr ln)
+				      (char-set-complement
+				       (char-set #\tab)))
 		     xs))))))))
 
 (define collins
